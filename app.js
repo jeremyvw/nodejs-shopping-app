@@ -9,19 +9,9 @@ const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
-// const expressHbs = require('express-handlebars'); // Handlebars Template Engine
+
 const app = express();
 
-// app.engine(
-//   'hbs',
-//   expressHbs({
-//     layoutsDir: 'views/layouts/',
-//     defaultLayout: 'main-layout',
-//     extname: 'hbs',
-//   })
-// ); // Handlebars Template Engine
-
-// app.set('view engine', 'pug'); // Pug Template Engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
@@ -37,9 +27,7 @@ app.use((req, res, next) => {
       req.user = user;
       next();
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
 });
 
 app.use('/admin', adminRoutes);
@@ -58,7 +46,7 @@ sequelize
   // .sync({ force: true })
   .sync()
   .then((result) => {
-    User.findByPk(1);
+    return User.findByPk(1);
     // console.log(result);
   })
   .then((user) => {
@@ -72,6 +60,9 @@ sequelize
   })
   .then((user) => {
     // console.log(user);
+    return user.createCart();
+  })
+  .then((cart) => {
     app.listen(3000);
   })
   .catch((err) => {
